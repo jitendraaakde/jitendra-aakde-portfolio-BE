@@ -1,0 +1,11 @@
+uvicorn==0.38.0
+docx
+fastapi==0.121.0
+python-dotenv==1.2.1
+pydantic[email]
+google-genai==1.49.0
+python-docx==1.2.0
+pdfminer
+pdfminer.six
+aiosmtplib
+google-genai
