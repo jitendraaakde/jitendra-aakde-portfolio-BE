@@ -8,7 +8,7 @@ load_dotenv()
 
 router = APIRouter()
 
-@router.post("/api/contact")
+@router.post("/contact")
 async def submit_contact(contact: ContactMessage):
     """
     Handle contact form submissions and send email
