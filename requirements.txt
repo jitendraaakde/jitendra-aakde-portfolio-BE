@@ -10,3 +10,4 @@ pdfminer.six
 aiosmtplib
 google-genai
 requests
+PyMuPDF

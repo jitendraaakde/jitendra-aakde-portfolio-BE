@@ -15,3 +15,7 @@ class Config:
     # Unreal Speech TTS Configuration
     UNREAL_SPEECH_API_KEY = get_config_value("UNREAL_SPEECH_API_KEY", None)
     UNREAL_SPEECH_VOICE = get_config_value("UNREAL_SPEECH_VOICE", "Will")  # Will = Mature Male voice
+    
+    # OpenRouter Configuration (Fallback for Gemini)
+    OPENROUTER_API_KEY = get_config_value("OPENROUTER_API_KEY", None)
+    OPENROUTER_MODEL = get_config_value("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
