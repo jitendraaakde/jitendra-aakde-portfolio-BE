@@ -9,3 +9,4 @@ pdfminer
 pdfminer.six
 aiosmtplib
 google-genai
+requests

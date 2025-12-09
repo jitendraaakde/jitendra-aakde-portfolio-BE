@@ -12,11 +12,8 @@ def intent_identification(query: str) -> str:
 
 def process_general_intent(query: str, history: list = None) -> str:
     try:
-        # Build conversation with history for context
-        conversations = []
-        if history:
-            conversations.extend(history)
-        conversations.append({"role": "user", "content": query})
+        # History already contains the user message from the controller
+        conversations = history if history else []
         
         response = call_gemini(GENERAL_QUERY_SYS_PROMPT, conversations, temperature=0.7)
         return response.strip()

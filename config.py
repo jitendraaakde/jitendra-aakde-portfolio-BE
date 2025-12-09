@@ -11,3 +11,7 @@ class Config:
     
     GEMINI_API_KEY = get_config_value("GEMINI_API_KEY", None)
     GEMINI_MODEL_NAME = get_config_value("GEMINI_MODEL_NAME", "gemini-2.5-flash-lite")
+    
+    # Unreal Speech TTS Configuration
+    UNREAL_SPEECH_API_KEY = get_config_value("UNREAL_SPEECH_API_KEY", None)
+    UNREAL_SPEECH_VOICE = get_config_value("UNREAL_SPEECH_VOICE", "Will")  # Will = Mature Male voice
