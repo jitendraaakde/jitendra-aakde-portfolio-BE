@@ -1,0 +1,52 @@
+# Render Blueprint Configuration
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: jitendra-portfolio-api
+    runtime: python
+    region: oregon  # or singapore, frankfurt, ohio
+    plan: free
+    
+    # Build configuration
+    buildCommand: pip install -r requirements.txt
+    
+    # Start command - use gunicorn for production (more robust than uvicorn alone)
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    
+    # Health check configuration
+    healthCheckPath: /api/v1/health
+    
+    # Environment variables (set these in Render dashboard)
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.4"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: ALLOWED_ORIGINS
+        sync: false  # Set this in Render dashboard
+      - key: GEMINI_API_KEY
+        sync: false  # Set this in Render dashboard
+      - key: GEMINI_MODEL_NAME
+        sync: false  # Set this in Render dashboard
+      - key: SMTP_HOST
+        sync: false  # Set this in Render dashboard
+      - key: SMTP_PORT
+        sync: false  # Set this in Render dashboard
+      - key: SMTP_USER
+        sync: false  # Set this in Render dashboard
+      - key: SMTP_PASSWORD
+        sync: false  # Set this in Render dashboard
+      - key: RECIPIENT_EMAIL
+        sync: false  # Set this in Render dashboard
+      - key: UNREAL_SPEECH_API_KEY
+        sync: false  # Set this in Render dashboard
+      - key: UNREAL_SPEECH_VOICE
+        sync: false  # Set this in Render dashboard
+      - key: OPENROUTER_API_KEY
+        sync: false  # Set this in Render dashboard
+      - key: OPENROUTER_MODEL
+        sync: false  # Set this in Render dashboard
+    
+    # Auto-deploy on push to main branch
+    autoDeploy: true

@@ -82,3 +82,56 @@ The server runs on:
 - **Auto-reload:** Enabled
 
 Frontend (Next.js) should be running on port 3000.
+
+## Deployment
+
+### Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+**Option 1: Using Render Dashboard (Recommended)**
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **New +** → **Web Service**
+3. Connect your GitHub/GitLab repository
+4. Configure the service:
+   - **Name:** `jitendra-portfolio-api`
+   - **Runtime:** `Python`
+   - **Build Command:** `pip install -r requirements.txt` or `./build.sh`
+   - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT` or `./start.sh`
+5. Add Environment Variables in the **Environment** section:
+   - `ALLOWED_ORIGINS` - Your frontend URL (e.g., `https://your-app.vercel.app`)
+   - `GEMINI_API_KEY` - Your Gemini API key
+   - `GEMINI_MODEL_NAME` - Gemini model name
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `RECIPIENT_EMAIL` - Email config
+   - `UNREAL_SPEECH_API_KEY`, `UNREAL_SPEECH_VOICE` - Speech API config (optional)
+   - `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` - OpenRouter config (optional)
+6. Click **Create Web Service**
+
+**Option 2: Using Blueprint (render.yaml)**
+
+1. Fork/push this repository to your GitHub account
+2. In Render Dashboard, click **New +** → **Blueprint**
+3. Connect to your repository containing `render.yaml`
+4. Render will auto-detect and configure the service
+5. Configure environment variables in the dashboard
+
+**Render Files:**
+- `render.yaml` - Blueprint configuration
+- `build.sh` - Build script
+- `start.sh` - Start script
+
+---
+
+### Deploy to Railway
+
+1. Go to [Railway](https://railway.app/)
+2. Click **New Project** → **Deploy from GitHub repo**
+3. Select your repository
+4. Railway will auto-detect `railway.json` and configure the service
+5. Add environment variables in the **Variables** tab
+6. Deploy!
+
+**Railway Files:**
+- `railway.json` - Railway configuration
+- `Procfile` - Process configuration
