@@ -1,19 +1,19 @@
-from utils.gemini import call_gemini, call_docs_gemini
+from utils.groq import call_groq, call_docs_groq
 from utils.openrouter import call_openrouter
 from utils.logger import logger
 from prompts import INTENT_IDENTIFICATION_PROMPT, GENERAL_QUERY_SYS_PROMPT, PDF_DOCUMENT_PROCESSING_PROMPT
 
 def intent_identification(query: str) -> str:
     try:
-        intent = call_gemini(INTENT_IDENTIFICATION_PROMPT, [{"role": "user", "content": query}], temperature=0.2)
+        intent = call_groq(INTENT_IDENTIFICATION_PROMPT, [{"role": "user", "content": query}], temperature=0.2)
         
-        # Fallback to OpenRouter if Gemini fails
+        # Fallback to OpenRouter if Groq fails
         if intent is None:
-            logger.info("Gemini failed for intent identification, trying OpenRouter fallback")
+            logger.info("Groq failed for intent identification, trying OpenRouter fallback")
             intent = call_openrouter(INTENT_IDENTIFICATION_PROMPT, [{"role": "user", "content": query}], temperature=0.2)
         
         if intent is None:
-            logger.warning("Both Gemini and OpenRouter failed for intent identification, defaulting to 'general'")
+            logger.warning("Both Groq and OpenRouter failed for intent identification, defaulting to 'general'")
             return "general"
             
         logger.info(f"Identified Intent: {intent}")
@@ -27,12 +27,12 @@ def process_general_intent(query: str, history: list = None) -> str:
         # History already contains the user message from the controller
         conversations = history if history else []
         
-        # Try Gemini first
-        response = call_gemini(GENERAL_QUERY_SYS_PROMPT, conversations, temperature=0.7)
+        # Try Groq first
+        response = call_groq(GENERAL_QUERY_SYS_PROMPT, conversations, temperature=0.7)
         
-        # Fallback to OpenRouter if Gemini fails
+        # Fallback to OpenRouter if Groq fails
         if response is None:
-            logger.info("Gemini failed, trying OpenRouter fallback")
+            logger.info("Groq failed, trying OpenRouter fallback")
             response = call_openrouter(GENERAL_QUERY_SYS_PROMPT, conversations, temperature=0.7)
         
         if response is None:
@@ -55,20 +55,23 @@ def process_user_intent(query: str, history: list = None) -> str:
         
         prompt_with_context = PDF_DOCUMENT_PROCESSING_PROMPT.format(query=query) + history_context
         
-        # Try Gemini first (with PDF document)
-        response = call_docs_gemini(
-            system_instructions=prompt_with_context,
-            document_name="data/Jitendra_aakde_resume.pdf",
-            temperature=0.3
-        )
+        # Try Groq first (with PDF document text)
+        # Extract text from resume PDF for Groq
+        from utils.pdf_extractor import extract_text_from_pdf
+        resume_text = extract_text_from_pdf("data/Jitendra_aakde_resume.pdf")
         
-        # Fallback to OpenRouter if Gemini fails - include PDF text in prompt
+        if resume_text:
+            response = call_docs_groq(
+                system_instructions=prompt_with_context,
+                document_text=resume_text,
+                temperature=0.3
+            )
+        else:
+            response = None
+        
+        # Fallback to OpenRouter if Groq fails - include PDF text in prompt
         if response is None:
-            logger.info("Gemini docs failed, trying OpenRouter fallback for user intent")
-            
-            # Extract text from resume PDF for OpenRouter
-            from utils.pdf_extractor import extract_text_from_pdf
-            resume_text = extract_text_from_pdf("data/Jitendra_aakde_resume.pdf")
+            logger.info("Groq docs failed, trying OpenRouter fallback for user intent")
             
             if resume_text:
                 # Include resume content in the system prompt

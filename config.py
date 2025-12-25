@@ -28,6 +28,10 @@ class Config:
     UNREAL_SPEECH_API_KEY = get_config_value("UNREAL_SPEECH_API_KEY", None)
     UNREAL_SPEECH_VOICE = get_config_value("UNREAL_SPEECH_VOICE", "Will")  # Will = Mature Male voice
     
-    # OpenRouter Configuration (Fallback for Gemini)
+    # Groq Configuration (Primary API, replacing Gemini)
+    GROQ_API_KEY = get_config_value("GROQ_API_KEY", None)
+    GROQ_MODEL = get_config_value("GROQ_MODEL", "llama-3.3-70b-versatile")
+    
+    # OpenRouter Configuration (Fallback for Groq)
     OPENROUTER_API_KEY = get_config_value("OPENROUTER_API_KEY", None)
     OPENROUTER_MODEL = get_config_value("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
