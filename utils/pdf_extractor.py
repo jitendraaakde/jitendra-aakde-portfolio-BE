@@ -32,7 +32,7 @@ def extract_text_from_pdf(pdf_path: str) -> str | None:
             doc.close()
             logger.info(f"Extracted PDF text using PyMuPDF: {len(text)} characters")
         except ImportError:
-            # Fallback to pypdf if fitz not available
+            # Fallback to pypdf / pdfminer.six if fitz not available
             try:
                 from pypdf import PdfReader
                 reader = PdfReader(pdf_path)
@@ -42,8 +42,13 @@ def extract_text_from_pdf(pdf_path: str) -> str | None:
                         text += page_text
                 logger.info(f"Extracted PDF text using pypdf: {len(text)} characters")
             except ImportError:
-                logger.error("No PDF extraction library available. Install PyMuPDF or pypdf.")
-                return None
+                try:
+                    from pdfminer.high_level import extract_text
+                    text = extract_text(pdf_path) or ""
+                    logger.info(f"Extracted PDF text using pdfminer.six: {len(text)} characters")
+                except ImportError:
+                    logger.error("No PDF extraction library available. Install PyMuPDF, pypdf, or pdfminer.six.")
+                    return None
         
         if not text.strip():
             logger.warning("No text extracted from PDF")
